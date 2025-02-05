@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 
 class TestHTMLNode(unittest.TestCase):
@@ -13,7 +13,7 @@ class TestHTMLNode(unittest.TestCase):
                 "target": "_blank",
             },
         )
-        correct_str = 'href="https://www.google.com" target="_blank"'
+        correct_str = ' href="https://www.google.com" target="_blank"'
         self.assertEqual(node.props_to_html(), correct_str)
 
     def test_eq_repr(self):
@@ -58,6 +58,21 @@ class TestLeafNode(unittest.TestCase):
         node = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
         expected = '<a href="https://www.google.com">Click me!</a>'
         self.assertEqual(node.to_html(), expected)
+
+
+class TestParentNode(unittest.TestCase):
+    def test_with_children(self):
+        node = ParentNode(
+            "p",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
+            ],
+        )
+        correct_str = "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>"
+        self.assertEqual(correct_str, node.to_html())
 
 
 if __name__ == "__main__":
