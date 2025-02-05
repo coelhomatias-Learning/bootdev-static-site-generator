@@ -74,6 +74,8 @@ class TestParentNode(unittest.TestCase):
         correct_str = "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>"
         self.assertEqual(correct_str, node.to_html())
 
+    # TODO: Add more tests for this class, see boot.dev solutions for "inspiration" ;)
+
 
 if __name__ == "__main__":
     unittest.main()

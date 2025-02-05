@@ -45,6 +45,8 @@ class LeafNode(HTMLNode):
     def __repr__(self):
         return f"LeafNode({self.tag}, {self.value}, {self.props})"
 
+    # TODO: Add __eq__ method
+
 
 class ParentNode(HTMLNode):
     def __init__(
@@ -62,3 +64,5 @@ class ParentNode(HTMLNode):
             raise ValueError("All parent nodes must have children")
 
         return f"<{self.tag}{self.props_to_html()}>{"".join(map(lambda x: x.to_html(), self.children))}</{self.tag}>"
+
+    # TODO: Add __eq__ method
