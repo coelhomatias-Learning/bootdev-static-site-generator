@@ -12,15 +12,22 @@ def split_nodes_delimiter(
 
         splited = node.text.split(delimiter)
 
+        if not delimiter:
+            raise Exception(f"Delimiter {delimiter} not valid")
+
         if len(splited) == 1:
-            raise Exception("Delimiter not found in the node text")
+            raise Exception(f"Delimiter {delimiter} not found in the node text")
 
-        _splits = [
-            TextNode(splited[0], TextType.NORMAL),
-            TextNode(splited[1], text_type),
-            TextNode(splited[2], TextType.NORMAL),
-        ]
+        if len(splited) % 2 == 0:
+            raise Exception("Invalid markdown, formated section not closed")
 
-        splits.extend(_splits)
+        for i, s in enumerate(splited):
+            if not s:
+                continue
+
+            if i % 2 != 0:
+                splits.append(TextNode(s, text_type))
+            else:
+                splits.append(TextNode(s, TextType.NORMAL))
 
     return splits
