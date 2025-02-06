@@ -54,6 +54,10 @@ class TestLeafNode(unittest.TestCase):
         expected = "<p>This is a paragraph of text.</p>"
         self.assertEqual(node.to_html(), expected)
 
+    def test_without_tag(self):
+        node = LeafNode(None, "Hello, world!")
+        self.assertEqual(node.to_html(), "Hello, world!")
+
     def test_with_props(self):
         node = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
         expected = '<a href="https://www.google.com">Click me!</a>'
@@ -74,7 +78,14 @@ class TestParentNode(unittest.TestCase):
         correct_str = "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>"
         self.assertEqual(correct_str, node.to_html())
 
-    # TODO: Add more tests for this class, see boot.dev solutions for "inspiration" ;)
+    def test_to_html_with_grandchildren(self):
+        grandchild_node = LeafNode("b", "grandchild")
+        child_node = ParentNode("span", [grandchild_node])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+            parent_node.to_html(),
+            "<div><span><b>grandchild</b></span></div>",
+        )
 
 
 if __name__ == "__main__":
