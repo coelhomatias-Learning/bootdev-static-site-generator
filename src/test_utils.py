@@ -5,6 +5,8 @@ from utils import (
     extract_mardown_images,
     extract_mardown_links,
     split_nodes_delimiter,
+    split_nodes_image,
+    split_nodes_link,
 )
 
 
@@ -87,6 +89,95 @@ class TestInlineMarkdown(unittest.TestCase):
             ],
             new_nodes,
         )
+
+    def test_delim_link(self):
+        node = TextNode(
+            "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
+            TextType.NORMAL,
+        )
+        correct = [
+            TextNode("This is text with a link ", TextType.NORMAL),
+            TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
+            TextNode(" and ", TextType.NORMAL),
+            TextNode(
+                "to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"
+            ),
+        ]
+        result = split_nodes_link([node])
+        self.assertEqual(correct, result)
+
+    def test_delim_links(self):
+        node = TextNode(
+            "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev) and again [to boot dev](https://www.boot.dev).",
+            TextType.NORMAL,
+        )
+        correct = [
+            TextNode("This is text with a link ", TextType.NORMAL),
+            TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
+            TextNode(" and ", TextType.NORMAL),
+            TextNode(
+                "to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"
+            ),
+            TextNode(" and again ", TextType.NORMAL),
+            TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
+            TextNode(".", TextType.NORMAL),
+        ]
+        result = split_nodes_link([node])
+        self.assertEqual(correct, result)
+
+    def test_delim_image(self):
+        node = TextNode(
+            "This is text with an image ![to boot dev](https://www.boot.dev) and ![to youtube](https://www.youtube.com/@bootdotdev)",
+            TextType.NORMAL,
+        )
+        correct = [
+            TextNode("This is text with an image ", TextType.NORMAL),
+            TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),
+            TextNode(" and ", TextType.NORMAL),
+            TextNode(
+                "to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev"
+            ),
+        ]
+        result = split_nodes_image([node])
+        self.assertEqual(correct, result)
+
+    def test_delim_images(self):
+        node = TextNode(
+            "This is text with an image ![to boot dev](https://www.boot.dev) and ![to youtube](https://www.youtube.com/@bootdotdev) and again ![to boot dev](https://www.boot.dev).",
+            TextType.NORMAL,
+        )
+        correct = [
+            TextNode("This is text with an image ", TextType.NORMAL),
+            TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),
+            TextNode(" and ", TextType.NORMAL),
+            TextNode(
+                "to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev"
+            ),
+            TextNode(" and again ", TextType.NORMAL),
+            TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),
+            TextNode(".", TextType.NORMAL),
+        ]
+        result = split_nodes_image([node])
+        self.assertEqual(correct, result)
+
+    def test_delim_images_and_links(self):
+        node = TextNode(
+            "This is text with an image ![to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev) and again ![to boot dev](https://www.boot.dev).",
+            TextType.NORMAL,
+        )
+        correct = [
+            TextNode("This is text with an image ", TextType.NORMAL),
+            TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),
+            TextNode(" and ", TextType.NORMAL),
+            TextNode(
+                "to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"
+            ),
+            TextNode(" and again ", TextType.NORMAL),
+            TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),
+            TextNode(".", TextType.NORMAL),
+        ]
+        result = split_nodes_link(split_nodes_image([node]))
+        self.assertEqual(correct, result)
 
 
 class TestRegex(unittest.TestCase):
