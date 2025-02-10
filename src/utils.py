@@ -19,9 +19,6 @@ def split_nodes_delimiter(
         if not delimiter:
             raise Exception(f"Delimiter {delimiter} not valid")
 
-        if len(splited) == 1:
-            raise Exception(f"Delimiter {delimiter} not found in the node text")
-
         if len(splited) % 2 == 0:
             raise Exception("Invalid markdown, formated section not closed")
 
@@ -106,3 +103,20 @@ def extract_mardown_images(text: str):
 
 def extract_mardown_links(text: str):
     return re.findall(r" \[(.*?)\]\((.*?)\)", text)
+
+
+def text_to_textnodes(text: str):
+    node = TextNode(text, TextType.NORMAL)
+    return split_nodes_link(
+        split_nodes_image(
+            split_nodes_delimiter(
+                split_nodes_delimiter(
+                    split_nodes_delimiter([node], "**", TextType.BOLD),
+                    "*",
+                    TextType.ITALIC,
+                ),
+                "`",
+                TextType.CODE,
+            )
+        )
+    )
