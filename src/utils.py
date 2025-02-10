@@ -1,3 +1,5 @@
+import re
+
 from textnode import TextNode, TextType
 
 
@@ -31,3 +33,11 @@ def split_nodes_delimiter(
                 splits.append(TextNode(s, TextType.NORMAL))
 
     return splits
+
+
+def extract_mardown_images(text: str):
+    return re.findall(r"!\[(.*?)\]\((.*?)\)", text)
+
+
+def extract_mardown_links(text: str):
+    return re.findall(r" \[(.*?)\]\((.*?)\)", text)
