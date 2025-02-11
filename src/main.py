@@ -1,9 +1,13 @@
-from textnode import TextNode, TextType
+from pathlib import Path
+
+from project_io import rcopydir
 
 
 def main():
-    dummy = TextNode("This is a text node", TextType.BOLD, "https://www.boot.dev")
-    print(dummy)
+    static_path = Path("static")
+    generated_path = Path("public")
+
+    rcopydir(static_path, generated_path)
 
 
 if __name__ == "__main__":
