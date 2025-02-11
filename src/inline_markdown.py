@@ -41,8 +41,8 @@ def _split_text(
     text: str,
     object: tuple[str, str],
     object_type: PossibleObjects,
-):
-    text_objects = []
+) -> tuple[list[TextNode], str]:
+    text_objects: list[TextNode] = []
     match object_type:
         case TextType.IMAGE:
             delimiter = f"![{object[0]}]({object[1]})"
@@ -57,7 +57,7 @@ def _split_text(
         text_objects.append(TextNode(splited[0], TextType.TEXT))
 
     if len(splited) == 1:
-        return text_objects
+        return text_objects, ""
 
     text_objects.append(TextNode(object[0], object_type, object[1]))
     return text_objects, splited[1]
@@ -65,7 +65,7 @@ def _split_text(
 
 def split_nodes_func(
     old_nodes: list[TextNode], node_type: PossibleObjects, func: Callable
-):
+) -> list[TextNode]:
     splits: list[TextNode] = []
     for node in old_nodes:
         if node.text_type != TextType.TEXT:
@@ -89,23 +89,23 @@ def split_nodes_func(
     return splits
 
 
-def split_nodes_image(old_nodes: list[TextNode]):
+def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     return split_nodes_func(old_nodes, TextType.IMAGE, extract_mardown_images)
 
 
-def split_nodes_link(old_nodes: list[TextNode]):
+def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
     return split_nodes_func(old_nodes, TextType.LINK, extract_mardown_links)
 
 
-def extract_mardown_images(text: str):
+def extract_mardown_images(text: str) -> list[str]:
     return re.findall(r"!\[(.*?)\]\((.*?)\)", text)
 
 
-def extract_mardown_links(text: str):
+def extract_mardown_links(text: str) -> list[str]:
     return re.findall(r" \[(.*?)\]\((.*?)\)", text)
 
 
-def text_to_textnodes(text: str):
+def text_to_textnodes(text: str) -> list[TextNode]:
     node = TextNode(text, TextType.TEXT)
     return split_nodes_link(
         split_nodes_image(
