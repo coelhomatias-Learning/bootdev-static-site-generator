@@ -10,7 +10,7 @@ def split_nodes_delimiter(
 ) -> list[TextNode]:
     splits: list[TextNode] = []
     for node in old_nodes:
-        if node.text_type != TextType.NORMAL:
+        if node.text_type != TextType.TEXT:
             splits.append(node)
             continue
 
@@ -29,7 +29,7 @@ def split_nodes_delimiter(
             if i % 2 != 0:
                 splits.append(TextNode(s, text_type))
             else:
-                splits.append(TextNode(s, TextType.NORMAL))
+                splits.append(TextNode(s, TextType.TEXT))
 
     return splits
 
@@ -54,7 +54,7 @@ def _split_text(
     splited = text.split(delimiter, 1)
 
     if splited[0]:
-        text_objects.append(TextNode(splited[0], TextType.NORMAL))
+        text_objects.append(TextNode(splited[0], TextType.TEXT))
 
     if len(splited) == 1:
         return text_objects
@@ -68,7 +68,7 @@ def split_nodes_func(
 ):
     splits: list[TextNode] = []
     for node in old_nodes:
-        if node.text_type != TextType.NORMAL:
+        if node.text_type != TextType.TEXT:
             splits.append(node)
             continue
 
@@ -84,7 +84,7 @@ def split_nodes_func(
             splits.extend(temp_splits)
 
         if remaining_text:
-            splits.append(TextNode(remaining_text, TextType.NORMAL))
+            splits.append(TextNode(remaining_text, TextType.TEXT))
 
     return splits
 
@@ -106,7 +106,7 @@ def extract_mardown_links(text: str):
 
 
 def text_to_textnodes(text: str):
-    node = TextNode(text, TextType.NORMAL)
+    node = TextNode(text, TextType.TEXT)
     return split_nodes_link(
         split_nodes_image(
             split_nodes_delimiter(

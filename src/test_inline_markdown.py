@@ -13,27 +13,27 @@ from textnode import TextNode, TextType
 
 class TestInlineMarkdown(unittest.TestCase):
     def test_delim_bold(self):
-        node = TextNode("This is text with a **bolded** word", TextType.NORMAL)
+        node = TextNode("This is text with a **bolded** word", TextType.TEXT)
         new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
         self.assertListEqual(
             [
-                TextNode("This is text with a ", TextType.NORMAL),
+                TextNode("This is text with a ", TextType.TEXT),
                 TextNode("bolded", TextType.BOLD),
-                TextNode(" word", TextType.NORMAL),
+                TextNode(" word", TextType.TEXT),
             ],
             new_nodes,
         )
 
     def test_delim_bold_double(self):
         node = TextNode(
-            "This is text with a **bolded** word and **another**", TextType.NORMAL
+            "This is text with a **bolded** word and **another**", TextType.TEXT
         )
         new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
         self.assertListEqual(
             [
-                TextNode("This is text with a ", TextType.NORMAL),
+                TextNode("This is text with a ", TextType.TEXT),
                 TextNode("bolded", TextType.BOLD),
-                TextNode(" word and ", TextType.NORMAL),
+                TextNode(" word and ", TextType.TEXT),
                 TextNode("another", TextType.BOLD),
             ],
             new_nodes,
@@ -41,52 +41,52 @@ class TestInlineMarkdown(unittest.TestCase):
 
     def test_delim_bold_multiword(self):
         node = TextNode(
-            "This is text with a **bolded word** and **another**", TextType.NORMAL
+            "This is text with a **bolded word** and **another**", TextType.TEXT
         )
         new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
         self.assertListEqual(
             [
-                TextNode("This is text with a ", TextType.NORMAL),
+                TextNode("This is text with a ", TextType.TEXT),
                 TextNode("bolded word", TextType.BOLD),
-                TextNode(" and ", TextType.NORMAL),
+                TextNode(" and ", TextType.TEXT),
                 TextNode("another", TextType.BOLD),
             ],
             new_nodes,
         )
 
     def test_delim_italic(self):
-        node = TextNode("This is text with an *italic* word", TextType.NORMAL)
+        node = TextNode("This is text with an *italic* word", TextType.TEXT)
         new_nodes = split_nodes_delimiter([node], "*", TextType.ITALIC)
         self.assertListEqual(
             [
-                TextNode("This is text with an ", TextType.NORMAL),
+                TextNode("This is text with an ", TextType.TEXT),
                 TextNode("italic", TextType.ITALIC),
-                TextNode(" word", TextType.NORMAL),
+                TextNode(" word", TextType.TEXT),
             ],
             new_nodes,
         )
 
     def test_delim_bold_and_italic(self):
-        node = TextNode("**bold** and *italic*", TextType.NORMAL)
+        node = TextNode("**bold** and *italic*", TextType.TEXT)
         new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
         new_nodes = split_nodes_delimiter(new_nodes, "*", TextType.ITALIC)
         self.assertListEqual(
             [
                 TextNode("bold", TextType.BOLD),
-                TextNode(" and ", TextType.NORMAL),
+                TextNode(" and ", TextType.TEXT),
                 TextNode("italic", TextType.ITALIC),
             ],
             new_nodes,
         )
 
     def test_delim_code(self):
-        node = TextNode("This is text with a `code block` word", TextType.NORMAL)
+        node = TextNode("This is text with a `code block` word", TextType.TEXT)
         new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
         self.assertListEqual(
             [
-                TextNode("This is text with a ", TextType.NORMAL),
+                TextNode("This is text with a ", TextType.TEXT),
                 TextNode("code block", TextType.CODE),
-                TextNode(" word", TextType.NORMAL),
+                TextNode(" word", TextType.TEXT),
             ],
             new_nodes,
         )
@@ -94,12 +94,12 @@ class TestInlineMarkdown(unittest.TestCase):
     def test_delim_link(self):
         node = TextNode(
             "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
-            TextType.NORMAL,
+            TextType.TEXT,
         )
         correct = [
-            TextNode("This is text with a link ", TextType.NORMAL),
+            TextNode("This is text with a link ", TextType.TEXT),
             TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
-            TextNode(" and ", TextType.NORMAL),
+            TextNode(" and ", TextType.TEXT),
             TextNode(
                 "to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"
             ),
@@ -110,18 +110,18 @@ class TestInlineMarkdown(unittest.TestCase):
     def test_delim_links(self):
         node = TextNode(
             "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev) and again [to boot dev](https://www.boot.dev).",
-            TextType.NORMAL,
+            TextType.TEXT,
         )
         correct = [
-            TextNode("This is text with a link ", TextType.NORMAL),
+            TextNode("This is text with a link ", TextType.TEXT),
             TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
-            TextNode(" and ", TextType.NORMAL),
+            TextNode(" and ", TextType.TEXT),
             TextNode(
                 "to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"
             ),
-            TextNode(" and again ", TextType.NORMAL),
+            TextNode(" and again ", TextType.TEXT),
             TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
-            TextNode(".", TextType.NORMAL),
+            TextNode(".", TextType.TEXT),
         ]
         result = split_nodes_link([node])
         self.assertEqual(correct, result)
@@ -129,12 +129,12 @@ class TestInlineMarkdown(unittest.TestCase):
     def test_delim_image(self):
         node = TextNode(
             "This is text with an image ![to boot dev](https://www.boot.dev) and ![to youtube](https://www.youtube.com/@bootdotdev)",
-            TextType.NORMAL,
+            TextType.TEXT,
         )
         correct = [
-            TextNode("This is text with an image ", TextType.NORMAL),
+            TextNode("This is text with an image ", TextType.TEXT),
             TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),
-            TextNode(" and ", TextType.NORMAL),
+            TextNode(" and ", TextType.TEXT),
             TextNode(
                 "to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev"
             ),
@@ -145,18 +145,18 @@ class TestInlineMarkdown(unittest.TestCase):
     def test_delim_images(self):
         node = TextNode(
             "This is text with an image ![to boot dev](https://www.boot.dev) and ![to youtube](https://www.youtube.com/@bootdotdev) and again ![to boot dev](https://www.boot.dev).",
-            TextType.NORMAL,
+            TextType.TEXT,
         )
         correct = [
-            TextNode("This is text with an image ", TextType.NORMAL),
+            TextNode("This is text with an image ", TextType.TEXT),
             TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),
-            TextNode(" and ", TextType.NORMAL),
+            TextNode(" and ", TextType.TEXT),
             TextNode(
                 "to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev"
             ),
-            TextNode(" and again ", TextType.NORMAL),
+            TextNode(" and again ", TextType.TEXT),
             TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),
-            TextNode(".", TextType.NORMAL),
+            TextNode(".", TextType.TEXT),
         ]
         result = split_nodes_image([node])
         self.assertEqual(correct, result)
@@ -164,18 +164,18 @@ class TestInlineMarkdown(unittest.TestCase):
     def test_delim_images_and_links(self):
         node = TextNode(
             "This is text with an image ![to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev) and again ![to boot dev](https://www.boot.dev).",
-            TextType.NORMAL,
+            TextType.TEXT,
         )
         correct = [
-            TextNode("This is text with an image ", TextType.NORMAL),
+            TextNode("This is text with an image ", TextType.TEXT),
             TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),
-            TextNode(" and ", TextType.NORMAL),
+            TextNode(" and ", TextType.TEXT),
             TextNode(
                 "to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"
             ),
-            TextNode(" and again ", TextType.NORMAL),
+            TextNode(" and again ", TextType.TEXT),
             TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),
-            TextNode(".", TextType.NORMAL),
+            TextNode(".", TextType.TEXT),
         ]
         result = split_nodes_link(split_nodes_image([node]))
         self.assertEqual(correct, result)
@@ -183,17 +183,17 @@ class TestInlineMarkdown(unittest.TestCase):
     def test_delim_all(self):
         text = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
         correct = [
-            TextNode("This is ", TextType.NORMAL),
+            TextNode("This is ", TextType.TEXT),
             TextNode("text", TextType.BOLD),
-            TextNode(" with an ", TextType.NORMAL),
+            TextNode(" with an ", TextType.TEXT),
             TextNode("italic", TextType.ITALIC),
-            TextNode(" word and a ", TextType.NORMAL),
+            TextNode(" word and a ", TextType.TEXT),
             TextNode("code block", TextType.CODE),
-            TextNode(" and an ", TextType.NORMAL),
+            TextNode(" and an ", TextType.TEXT),
             TextNode(
                 "obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"
             ),
-            TextNode(" and a ", TextType.NORMAL),
+            TextNode(" and a ", TextType.TEXT),
             TextNode("link", TextType.LINK, "https://boot.dev"),
         ]
 

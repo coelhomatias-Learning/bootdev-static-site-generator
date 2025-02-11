@@ -21,7 +21,7 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node, node2)
 
     def test_repr(self):
-        node = TextNode("This is a text node", TextType.NORMAL, "https://www.boot.dev")
+        node = TextNode("This is a text node", TextType.TEXT, "https://www.boot.dev")
         self.assertEqual(
             "TextNode(This is a text node, normal, https://www.boot.dev)", repr(node)
         )
@@ -29,7 +29,7 @@ class TestTextNode(unittest.TestCase):
 
 class TestTextNodeToHTMLNode(unittest.TestCase):
     def test_text_converstion(self):
-        node = TextNode("This is a test text node", TextType.NORMAL)
+        node = TextNode("This is a test text node", TextType.TEXT)
         node2 = LeafNode(None, "This is a test text node")
         self.assertEqual(text_node_to_html_node(node).to_html(), node2.to_html())
 
