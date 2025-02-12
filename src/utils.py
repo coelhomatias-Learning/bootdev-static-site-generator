@@ -23,7 +23,9 @@ def generate_page(
         raise Exception(f"From path {from_path} is not a file")
 
     if not template_path.is_file():
-        raise Exception(f"From path {template_path} is not a file")
+        raise Exception(
+            f"Template file {template_path} is not a file or does not exist"
+        )
 
     dest_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -44,3 +46,35 @@ def generate_page(
 
     with open(dest_path, "w") as f:
         f.write(final_html)
+
+
+def generate_pages_recursive(
+    dir_path_content: str | Path, template_path: str | Path, dest_dir_path: str | Path
+):
+    dir_path_content = Path(dir_path_content)
+    template_path = Path(template_path)
+    dest_dir_path = Path(dest_dir_path)
+
+    if not dir_path_content.is_dir():
+        raise Exception(f"Content path {dir_path_content} does not exist")
+
+    if not template_path.is_file():
+        raise Exception(
+            f"Template file {template_path} is not a file or does not exist"
+        )
+
+    content = list(dir_path_content.rglob("*.md"))
+
+    if not content:
+        raise Exception(f"No content found in {dir_path_content}")
+
+    dest_dir_path.mkdir(parents=True, exist_ok=True)
+
+    for md in content:
+        generate_page(
+            md,
+            template_path,
+            str(md)
+            .replace(str(dir_path_content), str(dest_dir_path))
+            .replace(".md", ".html"),
+        )
