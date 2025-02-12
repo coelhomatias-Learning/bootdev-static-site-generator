@@ -98,11 +98,11 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
 
 
 def extract_mardown_images(text: str) -> list[str]:
-    return re.findall(r"!\[(.*?)\]\((.*?)\)", text)
+    return re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
 
 
 def extract_mardown_links(text: str) -> list[str]:
-    return re.findall(r" \[(.*?)\]\((.*?)\)", text)
+    return re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
 
 
 def text_to_textnodes(text: str) -> list[TextNode]:
